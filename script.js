@@ -60,13 +60,13 @@ function rollDice() {
   resultText.textContent =
     playerName + "は " + dice + " が出ました！";
 
-  if (positions[currentPlayer] === squares.length - 1) {
-    resultText.textContent = playerName + "のゴールです！🎉";
-    turnText.textContent = "ゲーム終了！";
-    rollButton.disabled = true;
-    gameFinished = true;
-    return;
-  }
+ if (positions.every(position => position === squares.length - 1)) {
+  resultText.textContent = "全員ゴールしました！🎉";
+  turnText.textContent = "ゲーム終了！";
+  rollButton.disabled = true;
+  gameFinished = true;
+  return;
+}
 
  currentPlayer = (currentPlayer + 1) % pieces.length;
 

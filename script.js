@@ -1,147 +1,146 @@
+const boardImage = document.getElementById("board-image");
 
-const board = document.getElementById("board");
-const piece1 = document.getElementById("piece1");
-const piece2 = document.getElementById("piece2");
-const piece3 = document.getElementById("piece3");
-const piece4 = document.getElementById("piece4");
+const pieces = [
+  document.getElementById("piece1"),
+  document.getElementById("piece2"),
+  document.getElementById("piece3"),
+  document.getElementById("piece4")
+];
+
 const turnText = document.getElementById("turn");
 const resultText = document.getElementById("result");
 const positionsText = document.getElementById("positions");
 const rollButton = document.getElementById("roll");
 
-// STARTからGOALまでの10マスの位置。
-// 画像に合わせて、あとで位置を調整できます。
-const squares = [
-  { x: 10, y: 90 }, // START
-  { x: 22, y: 90 },
-  { x: 34, y: 90 },
-  { x: 46, y: 86 },
-  { x: 58, y: 82 },
-  { x: 48, y: 68 },
-  { x: 35, y: 60 },
-  { x: 22, y: 54 },
-  { x: 35, y: 40 },
-  { x: 68, y: 25 }  // GOAL
+const boardImages = [
+  "board1.jpg",
+  "board2.jpg",
+  "board3.jpg",
+  "board4.jpg",
+  "board5.jpg"
 ];
 
 const positions = [0, 0, 0, 0];
-const pieces = [piece1, piece2, piece3, piece4];
+const restTurns = [0, 0, 0, 0];
+
 let currentPlayer = 0;
+let finishedPlayers = [false, false, false, false];
 let gameFinished = false;
 
-function movePiece(player) {
-  const square = squares[positions[player]];
-  pieces[player].style.left = square.x + "%";
-  pieces[player].style.top = square.y + "%";
-}
-
-function updateDisplay() {
-  positionsText.innerHTML =
-    "🔴 プレイヤー1：" + positions[0] + "マス<br>" +
-    "🔵 プレイヤー2：" + positions[1] + "マス<br>" +
-    "🟡 プレイヤー3：" + positions[2] + "マス<br>" +
-    "🟢 プレイヤー4：" + positions[3] + "マス";
-}
-
-function rollDice() {
-  if (gameFinished) return;
-
-  const dice = Math.floor(Math.random() * 6) + 1;
-  const playerName = "プレイヤー" + (currentPlayer + 1);
-
-  positions[currentPlayer] = Math.min(
-    positions[currentPlayer] + dice,
-    squares.length - 1
+// マス番号に応じて画像を切り替える
+function updateBoard() {
+  const imageIndex = Math.min(
+    Math.floor(positions[currentPlayer] / 10),
+    4
   );
 
-  movePiece(currentPlayer);
+  boardImage.src = boardImages[imageIndex];
+}
+
+// コマの位置を更新
+function movePiece(player) {
+  const position = positions[player];
+  const imageIndex = Math.min(Math.floor(position / 10), 4);
+  const localPosition = position % 10;
+
+  updateBoard();
+
+  // 各画像内の仮の位置
+  const x = 10 + localPosition * 8;
+  const y = 50;
+
+  pieces[player].style.left = x + "%";
+  pieces[player].style.top = y + "%";
+}
+
+// プレイヤーの位置を表示
+function updateDisplay() {
+  positionsText.innerHTML =
+    "🔴 プレイヤー1：" + (positions[0] + 1) + "マス<br>" +
+    "🔵 プレイヤー2：" + (positions[1] + 1) + "マス<br>" +
+    "🟡 プレイヤー3：" + (positions[2] + 1) + "マス<br>" +
+    "🟢 プレイヤー4：" + (positions[3] + 1) + "マス";
+}
+
+// 次のプレイヤーへ
+function nextPlayer() {
+  currentPlayer = (currentPlayer + 1) % 4;
+
+  let count = 0;
+
+  while (
+    (finishedPlayers[currentPlayer] ||
+     restTurns[currentPlayer] > 0) &&
+    count < 4
+  ) {
+    if (restTurns[currentPlayer] > 0) {
+      restTurns[currentPlayer]--;
+      resultText.textContent =
+        "プレイヤー" + (currentPlayer + 1) + "は1回休みです。";
+    }
+
+    currentPlayer = (currentPlayer + 1) % 4;
+    count++;
+  }
+
+  if (finishedPlayers.every(value => value)) {
+    gameFinished = true;
+    turnText.textContent = "全員ゴールしました！";
+    rollButton.disabled = true;
+    return;
+  }
+
+  turnText.textContent =
+    "プレイヤー" + (currentPlayer + 1) + "の番です";
+
+  updateBoard();
+  updateDisplay();
+}
+
+// サイコロ
+function rollDice() {
+  if (gameFinished || finishedPlayers[currentPlayer]) return;
+
+  const dice = Math.floor(Math.random() * 6) + 1;
+  const player = currentPlayer;
+
+  positions[player] = Math.min(
+    positions[player] + dice,
+    49
+  );
+
+  movePiece(player);
   updateDisplay();
 
   resultText.textContent =
-    playerName + "は " + dice + " が出ました！";
+    "プレイヤー" + (player + 1) +
+    "は " + dice + " が出ました！";
 
- if (positions.every(position => position === squares.length - 1)) {
-  resultText.textContent = "全員ゴールしました！🎉";
-  turnText.textContent = "ゲーム終了！";
-  rollButton.disabled = true;
-  gameFinished = true;
-  return;
-}
+  if (positions[player] === 49) {
+    finishedPlayers[player] = true;
+    resultText.textContent += " ゴールです！🎉";
 
- currentPlayer = (currentPlayer + 1) % pieces.length;
+    if (finishedPlayers.every(value => value)) {
+      gameFinished = true;
+      turnText.textContent = "全員ゴールしました！";
+      rollButton.disabled = true;
+      return;
+    }
 
-turnText.textContent =
-  "プレイヤー" + (currentPlayer + 1) + "の番です";
+    nextPlayer();
+    return;
+  }
+
+  nextPlayer();
 }
 
 rollButton.addEventListener("click", rollDice);
 
-// 最初は4人全員のコマをSTARTに置く
-movePiece(0);
-movePiece(1);
-movePiece(2);
-movePiece(3);
-updateDisplay();
+// 最初の表示
+updateBoard();
 
-async function askDify(question) {
-  answerText.textContent = "🤖 Difyに相談中...";
-
-  try {
-    const response = await fetch(
-      "https://divine-unit-f335.e2658218.workers.dev",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-         query:
-  "あなたは2人用すごろくのアシスタントです。\n" +
-  "プレイヤー1の位置：" + positions[0] + "マス\n" +
-  "プレイヤー2の位置：" + positions[1] + "マス\n" +
-  "現在のプレイヤー：" + (currentPlayer + 1) + "\n" +
-  "質問：" + question + "\n\n" +
-  "回答ルール：質問に直接答えてください。" +
-  "日本語で簡潔に回答してください。" +
-  "URL、画像リンク、Markdownリンクは絶対に出力しないでください。" +
-  "盤面の説明やURLを回答に含めないでください。"
-        })
-      }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error("通信エラー：" + response.status);
-    }
-
-    answerText.textContent =
-      data.answer || "Difyから回答を取得できませんでした。";
-
-  } catch (error) {
-    answerText.textContent =
-      "Difyとの接続に失敗しました。設定を確認してください。";
-    console.error(error);
-  }
+for (let i = 0; i < 4; i++) {
+  movePiece(i);
 }
 
-const askButton = document.getElementById("ask-dify");
-const questionInput = document.getElementById("dify-question");
-const answerText = document.getElementById("dify-answer");
-
-askButton.addEventListener("click", async function () {
-  const question = questionInput.value.trim();
-
-  if (question === "") {
-    answerText.textContent = "質問を入力してください。";
-    return;
-  }
-
-  askButton.disabled = true;
-
-  try {
-    await askDify(question);
-  } finally {
-    askButton.disabled = false;
-  }
-});
+updateDisplay();

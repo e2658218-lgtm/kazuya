@@ -68,7 +68,7 @@ function rollDice() {
     return;
   }
 
-  currentPlayer = (currentPlayer + 1) % 4;
+ currentPlayer = (currentPlayer + 1) % pieces.length;
 
 turnText.textContent =
   "プレイヤー" + (currentPlayer + 1) + "の番です";

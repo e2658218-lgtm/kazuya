@@ -2,6 +2,8 @@
 const board = document.getElementById("board");
 const piece1 = document.getElementById("piece1");
 const piece2 = document.getElementById("piece2");
+const piece3 = document.getElementById("piece3");
+const piece4 = document.getElementById("piece4");
 const turnText = document.getElementById("turn");
 const resultText = document.getElementById("result");
 const positionsText = document.getElementById("positions");
@@ -22,8 +24,8 @@ const squares = [
   { x: 68, y: 25 }  // GOAL
 ];
 
-const positions = [0, 0];
-const pieces = [piece1, piece2];
+const positions = [0, 0, 0, 0];
+const pieces = [piece1, piece2, piece3, piece4];
 let currentPlayer = 0;
 let gameFinished = false;
 
@@ -36,7 +38,9 @@ function movePiece(player) {
 function updateDisplay() {
   positionsText.innerHTML =
     "🔴 プレイヤー1：" + positions[0] + "マス<br>" +
-    "🔵 プレイヤー2：" + positions[1] + "マス";
+    "🔵 プレイヤー2：" + positions[1] + "マス<br>" +
+    "🟡 プレイヤー3：" + positions[2] + "マス<br>" +
+    "🟢 プレイヤー4：" + positions[3] + "マス";
 }
 
 function rollDice() {
@@ -64,9 +68,10 @@ function rollDice() {
     return;
   }
 
-  currentPlayer = 1 - currentPlayer;
-  turnText.textContent =
-    "プレイヤー" + (currentPlayer + 1) + "の番です";
+  currentPlayer = (currentPlayer + 1) % 4;
+
+turnText.textContent =
+  "プレイヤー" + (currentPlayer + 1) + "の番です";
 }
 
 rollButton.addEventListener("click", rollDice);

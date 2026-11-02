@@ -76,9 +76,11 @@ turnText.textContent =
 
 rollButton.addEventListener("click", rollDice);
 
-// 最初は両方のコマをSTARTに置く
+// 最初は4人全員のコマをSTARTに置く
 movePiece(0);
 movePiece(1);
+movePiece(2);
+movePiece(3);
 updateDisplay();
 
 async function askDify(question) {

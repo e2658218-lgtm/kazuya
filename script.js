@@ -14,6 +14,10 @@ const positionsText = document.getElementById("positions");
 
 const rollButton = document.getElementById("roll");
 const nextButton = document.getElementById("next");
+const bgm = document.getElementById("bgm");
+const bgmButton = document.getElementById("bgm-button");
+
+bgm.volume = 0.3;
 
 const boardImages = [
   "board1.jpg",
@@ -265,3 +269,15 @@ updateBoard();
 renderPieces();
 updateDisplay();
 updateButtons();
+// BGMの再生・停止
+bgmButton.addEventListener("click", function () {
+  if (bgm.paused) {
+    bgm.play();
+
+    bgmButton.textContent = "🔇 BGM OFF";
+  } else {
+    bgm.pause();
+
+    bgmButton.textContent = "🎵 BGM ON";
+  }
+});

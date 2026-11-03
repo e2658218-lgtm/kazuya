@@ -48,6 +48,8 @@ const coordinates = [
 
 const positions = [0, 0, 0, 0];
 const finishedPlayers = [false, false, false, false];
+// 課題提出忘れイベントのマス（0から始まる番号）
+const eventSquares = [4, 14, 24, 34, 44];
 
 let currentPlayer = 0;
 let gameFinished = false;
@@ -122,33 +124,51 @@ function rollDice() {
   updateButtons();
 }
 
+
 // ② コマを移動する
 function moveCurrentPiece() {
   if (turnPhase !== "move" || gameFinished) return;
 
+  // サイコロの出目だけ進む
   positions[currentPlayer] = Math.min(
     positions[currentPlayer] + pendingDice,
     49
   );
 
+  // イベントマスに止まったか確認
+  if (eventSquares.includes(positions[currentPlayer])) {
+
+    // 3マス戻る
+    positions[currentPlayer] = Math.max(
+      positions[currentPlayer] - 3,
+      0
+    );
+
+    resultText.innerHTML =
+      "📚 課題を提出し忘れた！<br>" +
+      '<span style="color:red; font-weight:bold;">3マス戻る！</span>';
+
+  } else {
+    resultText.textContent =
+      "プレイヤー" + (currentPlayer + 1) +
+      "が " + (positions[currentPlayer] + 1) +
+      "マス目に到着しました！";
+  }
+
   updateBoard();
   renderPieces();
   updateDisplay();
 
-  resultText.textContent =
-    "プレイヤー" + (currentPlayer + 1) +
-    "が " + (positions[currentPlayer] + 1) +
-    "マス目に到着しました！";
-
+  // ゴール判定
   if (positions[currentPlayer] === 49) {
     finishedPlayers[currentPlayer] = true;
     resultText.textContent += " ゴールです！🎉";
   }
 
   turnPhase = "change";
-
   updateButtons();
 }
+
 
 // ③ 次のプレイヤーに交代
 function changePlayer() {

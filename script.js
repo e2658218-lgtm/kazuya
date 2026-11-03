@@ -48,6 +48,7 @@ const coordinates = [
 
 const positions = [0, 0, 0, 0];
 const finishedPlayers = [false, false, false, false];
+const restTurns = [0, 0, 0, 0];
 // 課題提出忘れイベントのマス（0から始まる番号）
 const eventSquares = [4, 14, 24, 34, 44];
 
@@ -135,10 +136,19 @@ function moveCurrentPiece() {
     49
   );
 
-  // イベントマスに止まったか確認
-  if (eventSquares.includes(positions[currentPlayer])) {
+  const position = positions[currentPlayer];
 
-    // 3マス戻る
+  // 1限の2マス目・3マス目：遅刻イベント
+  if (position === 1 || position === 2) {
+    restTurns[currentPlayer] = 1;
+
+    resultText.innerHTML =
+      "⏰ 遅刻してしまった！<br>" +
+      "教授に怒られる！<br>" +
+      '<span style="color:red; font-weight:bold;">1回休み！</span>';
+
+  // 課題提出忘れイベント
+  } else if (eventSquares.includes(position)) {
     positions[currentPlayer] = Math.max(
       positions[currentPlayer] - 3,
       0
@@ -151,15 +161,13 @@ function moveCurrentPiece() {
   } else {
     resultText.textContent =
       "プレイヤー" + (currentPlayer + 1) +
-      "が " + (positions[currentPlayer] + 1) +
-      "マス目に到着しました！";
+      "が " + (position + 1) + "マス目に到着しました！";
   }
 
   updateBoard();
   renderPieces();
   updateDisplay();
 
-  // ゴール判定
   if (positions[currentPlayer] === 49) {
     finishedPlayers[currentPlayer] = true;
     resultText.textContent += " ゴールです！🎉";
@@ -168,7 +176,6 @@ function moveCurrentPiece() {
   turnPhase = "change";
   updateButtons();
 }
-
 
 // ③ 次のプレイヤーに交代
 function changePlayer() {

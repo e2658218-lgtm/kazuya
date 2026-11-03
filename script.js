@@ -177,10 +177,12 @@ function moveCurrentPiece() {
   updateButtons();
 }
 
+
 // ③ 次のプレイヤーに交代
 function changePlayer() {
   if (turnPhase !== "change" || gameFinished) return;
 
+  // 全員ゴールしているか確認
   if (finishedPlayers.every(value => value)) {
     gameFinished = true;
     turnText.textContent = "全員ゴールしました！";
@@ -189,24 +191,61 @@ function changePlayer() {
     return;
   }
 
-  let checked = 0;
+  let skippedPlayers = [];
 
-  do {
+  // 次にプレイできる人を探す
+  for (let i = 0; i < 4; i++) {
     currentPlayer = (currentPlayer + 1) % 4;
-    checked++;
-  } while (finishedPlayers[currentPlayer] && checked < 4);
 
+    // ゴールした人は飛ばす
+    if (finishedPlayers[currentPlayer]) {
+      continue;
+    }
+
+    // 1回休みなら飛ばす
+    if (restTurns[currentPlayer] > 0) {
+      restTurns[currentPlayer]--;
+
+      skippedPlayers.push(
+        "プレイヤー" + (currentPlayer + 1)
+      );
+
+      continue;
+    }
+
+    // 休みでない人が見つかった
+    break;
+  }
+
+  // 全員ゴールしている場合
+  if (finishedPlayers.every(value => value)) {
+    gameFinished = true;
+    turnText.textContent = "全員ゴールしました！";
+    resultText.textContent = "ゲーム終了です！🎉";
+    updateButtons();
+    return;
+  }
+
+  // 次のプレイヤーを表示
   turnText.textContent =
     "プレイヤー" + (currentPlayer + 1) + "の番です";
 
-  resultText.textContent = "サイコロを振ってください！";
+  if (skippedPlayers.length > 0) {
+    resultText.innerHTML =
+      '<span style="color:red; font-weight:bold;">' +
+      skippedPlayers.join("・") +
+      "は1回休みです！</span><br>" +
+      "プレイヤー" + (currentPlayer + 1) +
+      "の番です。";
+  } else {
+    resultText.textContent = "サイコロを振ってください！";
+  }
 
   updateBoard();
   renderPieces();
   updateDisplay();
 
   turnPhase = "roll";
-
   updateButtons();
 }
 

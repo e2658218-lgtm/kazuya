@@ -19,7 +19,7 @@ const boardImages = [
   "board2.jpg",
   "board3.jpg",
   "board4.jpg",
-  "board5.jpg"
+  "夕暮れの大学キャンパスすごろく.png"
 ];
 
 // 各盤面のマスの座標（横%, 縦%）

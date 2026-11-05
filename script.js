@@ -65,6 +65,51 @@ let gameFinished = false;
 // change：次のプレイヤーに交代する段階
 let turnPhase = "roll";
 let pendingDice = 0;
+// Difyにゲーム状況を送って実況してもらう
+async function sendGameCommentary(eventText) {
+
+  const answerArea = document.getElementById("dify-answer");
+
+  const gameStatus =
+    "サイコロの出目：" + pendingDice + "\n" +
+    "プレイヤー1：" + (positions[0] + 1) + "マス目\n" +
+    "プレイヤー2：" + (positions[1] + 1) + "マス目\n" +
+    "プレイヤー3：" + (positions[2] + 1) + "マス目\n" +
+    "プレイヤー4：" + (positions[3] + 1) + "マス目";
+
+  answerArea.textContent = "🎤 AIが実況を準備しています...";
+
+  try {
+    const response = await fetch(
+      "https://divine-unit-f335.e2658218.workers.dev",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          player_name: "プレイヤー" + (currentPlayer + 1),
+          game_status: gameStatus,
+          event: eventText,
+          user: "sugoroku-player"
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error("Difyとの通信に失敗しました");
+    }
+
+    answerArea.textContent = data.answer || "実況を取得できませんでした。";
+
+  } catch (error) {
+    answerArea.textContent =
+      "実況の取得に失敗しました。通信状況を確認してください。";
+    console.error(error);
+  }
+}
 
 function getBoardIndex(position) {
   return Math.min(Math.floor(position / 10), 4);

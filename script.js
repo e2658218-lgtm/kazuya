@@ -221,6 +221,8 @@ function moveCurrentPiece() {
     finishedPlayers[currentPlayer] = true;
     resultText.textContent += " ゴールです！🎉";
   }
+  // Difyに移動結果を実況してもらう
+sendGameCommentary(resultText.textContent);
 
   turnPhase = "change";
   updateButtons();

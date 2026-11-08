@@ -111,34 +111,36 @@ async function sendGameCommentary(eventText) {
     console.error(error);
   }
 }
+
 // 退学演出の動画を再生する
 function playTaigakuVideo() {
   const overlay = document.getElementById("taigaku-overlay");
   const video = document.getElementById("taigaku-video");
 
   return new Promise((resolve, reject) => {
+    video.pause();
+    video.currentTime = 0;
 
-    // 動画が終了したときの処理
-    const finishVideo = () => {
+    overlay.style.display = "flex";
+
+    video.onended = () => {
       overlay.style.display = "none";
       video.pause();
-      video.removeEventListener("ended", finishVideo);
       resolve();
     };
 
-    // 動画を最初から再生
-    video.currentTime = 0;
-    overlay.style.display = "flex";
-
-    video.addEventListener("ended", finishVideo);
+    video.onerror = () => {
+      overlay.style.display = "none";
+      reject(new Error("動画ファイルを読み込めませんでした"));
+    };
 
     video.play().catch(error => {
-      video.removeEventListener("ended", finishVideo);
       overlay.style.display = "none";
       reject(error);
     });
   });
 }
+
 // 退学イベント
 async function checkTaigaku() {
 

@@ -190,10 +190,13 @@ function renderPieces() {
   for (let i = 0; i < 4; i++) {
     const playerBoard = getBoardIndex(positions[i]);
 
-    if (playerBoard !== currentBoard) {
-      pieces[i].style.display = "none";
-      continue;
-    }
+    if (
+  playerBoard !== currentBoard ||
+  eliminatedPlayers[i]
+) {
+  pieces[i].style.display = "none";
+  continue;
+}
 
     pieces[i].style.display = "block";
 
@@ -298,7 +301,11 @@ function changePlayer() {
   if (turnPhase !== "change" || gameFinished) return;
 
   // 全員ゴールしているか確認
-  if (finishedPlayers.every(value => value)) {
+ if (
+  finishedPlayers.every((finished, i) =>
+    finished || eliminatedPlayers[i]
+  )
+) {
     gameFinished = true;
     turnText.textContent = "全員ゴールしました！";
     resultText.textContent = "ゲーム終了です！🎉";
@@ -312,10 +319,13 @@ function changePlayer() {
   for (let i = 0; i < 4; i++) {
     currentPlayer = (currentPlayer + 1) % 4;
 
-    // ゴールした人は飛ばす
-    if (finishedPlayers[currentPlayer]) {
-      continue;
-    }
+   // ゴールした人・退学した人は飛ばす
+if (
+  finishedPlayers[currentPlayer] ||
+  eliminatedPlayers[currentPlayer]
+) {
+  continue;
+}
 
     // 1回休みなら飛ばす
     if (restTurns[currentPlayer] > 0) {
@@ -333,7 +343,11 @@ function changePlayer() {
   }
 
   // 全員ゴールしている場合
-  if (finishedPlayers.every(value => value)) {
+ if (
+  finishedPlayers.every((finished, i) =>
+    finished || eliminatedPlayers[i]
+  )
+) {
     gameFinished = true;
     turnText.textContent = "全員ゴールしました！";
     resultText.textContent = "ゲーム終了です！🎉";

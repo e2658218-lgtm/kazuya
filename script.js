@@ -53,6 +53,7 @@ const coordinates = [
 const positions = [0, 0, 0, 0];
 const finishedPlayers = [false, false, false, false];
 const restTurns = [0, 0, 0, 0];
+const eliminatedPlayers = [false, false, false, false];
 // 課題提出忘れイベントのマス（0から始まる番号）
 const eventSquares = [4, 14, 24, 34, 44];
 

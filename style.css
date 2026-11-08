@@ -171,3 +171,22 @@ body > p {
   height: 100%;
   object-fit: contain;
 }
+/* GAME OVER画面 */
+#gameover-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+#gameover-overlay img {
+  width: 80%;
+  height: auto;
+  object-fit: contain;
+}

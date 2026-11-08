@@ -218,15 +218,15 @@ function updateDisplay() {
 }
 
 // ボタンの状態を更新
+// ボタンの状態を更新
 function updateButtons() {
- function updateButtons() {
-  rollButton.disabled = turnPhase !== "roll" || gameFinished;
+  rollButton.disabled =
+    turnPhase !== "roll" || gameFinished;
 
   nextButton.disabled =
     (turnPhase !== "move" && turnPhase !== "change") ||
     gameFinished;
 }
-
 // ① サイコロを振る
 function rollDice() {
   if (turnPhase !== "roll" || gameFinished) return;

@@ -68,10 +68,16 @@
   </div>
 
   <script src="script.js?v=9"></script>
-  <!-- 退学演出動画 -->
+ <!-- 退学演出動画 -->
 <div id="taigaku-overlay" style="display:none;">
-  <video id="taigaku-video" src="taigaku.mp4" playsinline>
+  <video
+    id="taigaku-video"
+    src="./taigaku.mp4"
+    playsinline
+    preload="auto"
+    controls
+    width="100%"
+  >
+    お使いのブラウザは動画に対応していません。
   </video>
 </div>
-</body>
-</html>

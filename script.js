@@ -154,6 +154,10 @@ async function checkTaigaku() {
   // 退学演出を表示
   resultText.textContent =
     "プレイヤー" + (player + 1) + "に退学通知が届いた！！";
+  // BGMを強制停止する
+bgm.pause();
+bgm.currentTime = 0;
+bgmButton.textContent = "🎵 BGM ON";
 
   try {
     await playTaigakuVideo();

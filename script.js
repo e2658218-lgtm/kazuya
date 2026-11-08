@@ -268,6 +268,13 @@ async function moveCurrentPiece() {
   if (turnPhase !== "move" || gameFinished) return;
     turnPhase = "processing";
   updateButtons();
+  // 4人全員が退学した場合
+if (eliminatedPlayers.every(player => player)) {
+    gameFinished = true;
+
+    document.getElementById("gameover-overlay").style.display = "flex";
+    return;
+}
 
   // サイコロの出目だけ進む
   positions[currentPlayer] = Math.min(

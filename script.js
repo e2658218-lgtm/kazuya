@@ -294,8 +294,7 @@ async function moveCurrentPiece() {
     finishedPlayers[currentPlayer] = true;
     resultText.textContent += " ゴールです！🎉";
   }
-  // Difyに移動結果を実況してもらう
-sendGameCommentary(resultText.textContent);
+ 
 
   turnPhase = "change";
   updateButtons();
@@ -312,11 +311,11 @@ function changePlayer() {
     finished || eliminatedPlayers[i]
   )
 ) {
-    gameFinished = true;
-    turnText.textContent = "全員ゴールしました！";
-    resultText.textContent = "ゲーム終了です！🎉";
-    updateButtons();
-    return;
+   gameFinished = true;
+turnText.textContent = "ゲーム終了！";
+resultText.textContent = "これ以上プレイできるプレイヤーはいません！🎉";
+updateButtons();
+return;
   }
 
   let skippedPlayers = [];

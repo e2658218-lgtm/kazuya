@@ -71,12 +71,13 @@
  <!-- 退学演出動画 -->
 <div id="taigaku-overlay" style="display:none;">
   <video
-    id="taigaku-video"
-    src="./Video%20Project%201.mp4"
-    playsinline
-    preload="auto"
-    width="100%"
-  >
-    お使いのブラウザは動画に対応していません。
-  </video>
+  id="taigaku-video"
+  src="./Video%20Project%201.mp4"
+  playsinline
+  webkit-playsinline
+  preload="auto"
+  disablepictureinpicture
+  controlslist="nodownload nofullscreen noremoteplayback"
+  width="100%"
+>
 </div>

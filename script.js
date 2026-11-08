@@ -123,6 +123,8 @@ function playTaigakuVideo() {
 
     overlay.style.display = "flex";
     video.controls = false;
+    video.disablePictureInPicture = true;
+video.setAttribute("controlsList", "nodownload nofullscreen noremoteplayback");
 
     video.onended = () => {
       overlay.style.display = "none";

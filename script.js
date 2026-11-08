@@ -214,13 +214,21 @@ function renderPieces() {
   }
 }
 
+
 // プレイヤーの位置を表示
 function updateDisplay() {
   positionsText.innerHTML =
-    "🔴 プレイヤー1：" + (positions[0] + 1) + "マス<br>" +
-    "🔵 プレイヤー2：" + (positions[1] + 1) + "マス<br>" +
-    "🟡 プレイヤー3：" + (positions[2] + 1) + "マス<br>" +
-    "🟢 プレイヤー4：" + (positions[3] + 1) + "マス";
+    "🔴 プレイヤー1：" + (positions[0] + 1) + "マス" +
+    (eliminatedPlayers[0] ? ' <span style="color:red; font-weight:bold;">退学</span>' : "") + "<br>" +
+
+    "🔵 プレイヤー2：" + (positions[1] + 1) + "マス" +
+    (eliminatedPlayers[1] ? ' <span style="color:red; font-weight:bold;">退学</span>' : "") + "<br>" +
+
+    "🟡 プレイヤー3：" + (positions[2] + 1) + "マス" +
+    (eliminatedPlayers[2] ? ' <span style="color:red; font-weight:bold;">退学</span>' : "") + "<br>" +
+
+    "🟢 プレイヤー4：" + (positions[3] + 1) + "マス" +
+    (eliminatedPlayers[3] ? ' <span style="color:red; font-weight:bold;">退学</span>' : "");
 }
 
 // ボタンの状態を更新

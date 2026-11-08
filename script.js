@@ -314,7 +314,18 @@ updateDisplay();
 if (eliminatedPlayers.every(player => player)) {
     gameFinished = true;
 
+    // 通常BGMを停止
+    bgm.pause();
+    bgm.currentTime = 0;
+    bgmButton.textContent = "🎵 BGM ON";
+
+    // GAME OVER画面を表示
     document.getElementById("gameover-overlay").style.display = "flex";
+
+    // GAME OVER専用BGMを再生
+    const gameoverBgm = document.getElementById("gameover-bgm");
+    gameoverBgm.currentTime = 0;
+    gameoverBgm.play();
 
     turnText.textContent = "GAME OVER";
     resultText.textContent = "全員退学しました！";

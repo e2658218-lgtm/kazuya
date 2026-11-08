@@ -268,13 +268,7 @@ async function moveCurrentPiece() {
   if (turnPhase !== "move" || gameFinished) return;
     turnPhase = "processing";
   updateButtons();
-  // 4人全員が退学した場合
-if (eliminatedPlayers.every(player => player)) {
-    gameFinished = true;
-
-    document.getElementById("gameover-overlay").style.display = "flex";
-    return;
-}
+ 
 
   // サイコロの出目だけ進む
   positions[currentPlayer] = Math.min(
@@ -311,9 +305,23 @@ if (eliminatedPlayers.every(player => player)) {
   }
   // 10％の確率で退学イベントを抽選
   await checkTaigaku();
-  updateBoard();
-  renderPieces();
-  updateDisplay();
+
+updateBoard();
+renderPieces();
+updateDisplay();
+
+// 4人全員が退学した場合
+if (eliminatedPlayers.every(player => player)) {
+    gameFinished = true;
+
+    document.getElementById("gameover-overlay").style.display = "flex";
+
+    turnText.textContent = "GAME OVER";
+    resultText.textContent = "全員退学しました！";
+
+    updateButtons();
+    return;
+}
 
    if (!eliminatedPlayers[currentPlayer] &&
       positions[currentPlayer] === 49) {

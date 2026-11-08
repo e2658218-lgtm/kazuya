@@ -238,7 +238,7 @@ function rollDice() {
 
 
 // ② コマを移動する
-function moveCurrentPiece() {
+async function moveCurrentPiece() {
   if (turnPhase !== "move" || gameFinished) return;
 
   // サイコロの出目だけ進む

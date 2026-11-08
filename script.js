@@ -219,8 +219,12 @@ function updateDisplay() {
 
 // ボタンの状態を更新
 function updateButtons() {
+ function updateButtons() {
   rollButton.disabled = turnPhase !== "roll" || gameFinished;
-  nextButton.disabled = turnPhase === "roll" || gameFinished;
+
+  nextButton.disabled =
+    (turnPhase !== "move" && turnPhase !== "change") ||
+    gameFinished;
 }
 
 // ① サイコロを振る
@@ -243,6 +247,8 @@ function rollDice() {
 // ② コマを移動する
 async function moveCurrentPiece() {
   if (turnPhase !== "move" || gameFinished) return;
+    turnPhase = "processing";
+  updateButtons();
 
   // サイコロの出目だけ進む
   positions[currentPlayer] = Math.min(

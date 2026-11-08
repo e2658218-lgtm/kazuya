@@ -274,12 +274,14 @@ async function moveCurrentPiece() {
       "プレイヤー" + (currentPlayer + 1) +
       "が " + (position + 1) + "マス目に到着しました！";
   }
-
+  // 10％の確率で退学イベントを抽選
+  await checkTaigaku();
   updateBoard();
   renderPieces();
   updateDisplay();
 
-  if (positions[currentPlayer] === 49) {
+   if (!eliminatedPlayers[currentPlayer] &&
+      positions[currentPlayer] === 49) {
     finishedPlayers[currentPlayer] = true;
     resultText.textContent += " ゴールです！🎉";
   }
@@ -372,6 +374,7 @@ nextButton.addEventListener("click", function () {
     changePlayer();
   }
 });
+
 
 // 最初の画面
 updateBoard();

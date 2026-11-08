@@ -457,3 +457,51 @@ bgmButton.addEventListener("click", function () {
     bgmButton.textContent = "🎵 BGM ON";
   }
 });
+// Rキーでゲームを最初からやり直す
+document.addEventListener("keydown", function(event) {
+
+  // 全員退学してGAME OVERになった場合のみ実行
+  if (
+    event.key.toLowerCase() !== "r" ||
+    !eliminatedPlayers.every(player => player)
+  ) {
+    return;
+  }
+
+  // プレイヤーの状態をリセット
+  for (let i = 0; i < 4; i++) {
+    positions[i] = 0;
+    finishedPlayers[i] = false;
+    restTurns[i] = 0;
+    eliminatedPlayers[i] = false;
+    pieces[i].style.display = "block";
+  }
+
+  // ゲームの状態をリセット
+  currentPlayer = 0;
+  gameFinished = false;
+  turnPhase = "roll";
+  pendingDice = 0;
+
+  // GAME OVER画面を非表示
+  document.getElementById("gameover-overlay").style.display = "none";
+
+  // GAME OVER専用BGMを停止
+  const gameoverBgm = document.getElementById("gameover-bgm");
+  gameoverBgm.pause();
+  gameoverBgm.currentTime = 0;
+
+  // 通常BGMのボタン表示をリセット
+  bgm.pause();
+  bgm.currentTime = 0;
+  bgmButton.textContent = "🎵 BGM ON";
+
+  // 画面を初期状態に戻す
+  turnText.textContent = "プレイヤー1の番です";
+  resultText.textContent = "ボタンを押してゲーム開始！";
+
+  updateBoard();
+  renderPieces();
+  updateDisplay();
+  updateButtons();
+});

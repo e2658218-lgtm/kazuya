@@ -173,6 +173,8 @@ bgmButton.textContent = "🎵 BGM ON";
 
   resultText.textContent =
     "🚨 プレイヤー" + (player + 1) + "は退学！！";
+  // 退学表示を更新
+updateDisplay();
 
   // Difyに退学イベントを実況してもらう
   sendGameCommentary("プレイヤー" + (player + 1) + "が退学しました！");

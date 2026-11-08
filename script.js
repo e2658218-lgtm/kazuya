@@ -111,7 +111,68 @@ async function sendGameCommentary(eventText) {
     console.error(error);
   }
 }
+// 退学演出の動画を再生する
+function playTaigakuVideo() {
+  const overlay = document.getElementById("taigaku-overlay");
+  const video = document.getElementById("taigaku-video");
 
+  return new Promise((resolve, reject) => {
+
+    // 動画が終了したときの処理
+    const finishVideo = () => {
+      overlay.style.display = "none";
+      video.pause();
+      video.removeEventListener("ended", finishVideo);
+      resolve();
+    };
+
+    // 動画を最初から再生
+    video.currentTime = 0;
+    overlay.style.display = "flex";
+
+    video.addEventListener("ended", finishVideo);
+
+    video.play().catch(error => {
+      video.removeEventListener("ended", finishVideo);
+      overlay.style.display = "none";
+      reject(error);
+    });
+  });
+}
+// 退学イベント
+async function checkTaigaku() {
+
+  // 10％の確率で退学
+  if (Math.random() >= 0.1) {
+    return false;
+  }
+
+  const player = currentPlayer;
+
+  // 退学演出を表示
+  resultText.textContent =
+    "プレイヤー" + (player + 1) + "に退学通知が届いた！！";
+
+  try {
+    await playTaigakuVideo();
+  } catch (error) {
+    console.error("動画の再生に失敗しました", error);
+  }
+
+  // プレイヤーを退学状態にする
+  eliminatedPlayers[player] = true;
+
+  // コマを非表示にする
+  pieces[player].style.display = "none";
+
+  resultText.textContent =
+    "🚨 プレイヤー" + (player + 1) + "は退学！！";
+
+  // Difyに退学イベントを実況してもらう
+  sendGameCommentary("プレイヤー" + (player + 1) + "が退学しました！");
+
+  return true;
+}
 function getBoardIndex(position) {
   return Math.min(Math.floor(position / 10), 4);
 }

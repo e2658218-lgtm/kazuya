@@ -122,6 +122,7 @@ function playTaigakuVideo() {
     video.currentTime = 0;
 
     overlay.style.display = "flex";
+    video.controls = false;
 
     video.onended = () => {
       overlay.style.display = "none";
